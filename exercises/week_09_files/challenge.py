@@ -11,6 +11,8 @@ Keep names and parameters unchanged so the automated tests can call them.
 # Return 0 for an empty file.
 # Example: a file containing "a\nb\nc\n" returns 3
 def count_lines(filepath):
+    with open(filepath, "r", encoding="utf-8") as f:
+        return len(f.readlines())
     # TODO: Open filepath and return the total number of lines
     pass
 
@@ -22,6 +24,9 @@ def count_lines(filepath):
 #   1. apple
 #   2. banana
 def write_numbered_lines(filepath, lines):
+    with open(filepath, "w", encoding="utf-8") as f:
+        for number, text in enumerate(lines, start=1):
+            f.write(f"{number}. {text}\n")
     # TODO: Write numbered lines to filepath
     pass
 
@@ -33,6 +38,14 @@ def write_numbered_lines(filepath, lines):
 # Example: searching "python" in ["Hello\n", "Python 3\n", "learn python\n"]
 #          returns ["Python 3", "learn python"]
 def find_matching_lines(filepath, keyword):
+    matches = []
+    keyword_lower = keyword.lower()
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            clean_line = line.rstrip("\n")
+            if keyword_lower in clean_line.lower():
+                matches.append(clean_line)
+    return matches
     # TODO: Return matching lines stripped of trailing newlines
     pass
 
@@ -45,5 +58,10 @@ def find_matching_lines(filepath, keyword):
 #           missing file returns default
 #           file containing "hello" returns default
 def safe_read_int(filepath, default=0):
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            return int(f.read().strip())
+    except (FileNotFoundError, ValueError):
+        return default
     # TODO: Safely read and parse an integer from filepath
     pass
